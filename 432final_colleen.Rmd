@@ -1,0 +1,48 @@
+---
+title: "Untitled"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+```
+```{r}
+train<-read.csv("/Users/colleenjung/Downloads/spaceship-titanic/train.csv")
+head(train)
+dim(train)
+```
+```{r}
+#drop missing values
+train = train[(!apply(train == '', 1, any)), ]
+# split column and add new columns to df
+train=train %>% 
+  drop_na()%>%
+  separate('Cabin', c('Deck', 'Num', 'Side'), sep='/') %>%
+  separate('PassengerId',c('group', 'people'), sep = '_') 
+
+#train
+colSums(is.na(train) | train == '')
+```
+
+```{r}
+#Convert wide to long
+#Small Multiple Chart
+p <- train %>% 
+    keep(is.numeric) %>%
+    gather() %>% 
+    ggplot(aes(value)) +
+    facet_wrap(~ key, scales = "free") +
+    geom_histogram(bins = 50) 
+p
+tb1=train %>%
+  select('HomePlanet', 'Transported')%>%
+  group_by('HomePlanet', 'Transported')%>%
+  summarise(n=n())
+tb1
+```
+1. Viewing distribution:
+2. Skewness
+
