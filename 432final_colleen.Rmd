@@ -25,6 +25,11 @@ train=train %>%
 
 #train
 colSums(is.na(train) | train == '')
+
+#replace 1 or 0 to VIP, CryoSleep, Transported
+train$VIP=as.numeric(as.logical(train$VIP))
+train$CryoSleep=as.numeric(as.logical(train$CryoSleep))
+train$Transported=as.numeric(as.logical(train$Transported))
 ```
 
 ```{r}
@@ -37,11 +42,12 @@ p <- train %>%
     facet_wrap(~ key, scales = "free") +
     geom_histogram(bins = 50) 
 p
-tb1=train %>%
-  select('HomePlanet', 'Transported')%>%
-  group_by('HomePlanet', 'Transported')%>%
-  summarise(n=n())
-tb1
+table(train$HomePlanet)
+table(train$Destination)
+table(train$people)
+
+table(train$Transported)
+hist(as.numeric(train$group))
 ```
 1. Viewing distribution:
 2. Skewness
