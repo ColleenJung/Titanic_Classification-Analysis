@@ -52,3 +52,43 @@ hist(as.numeric(train$group))
 1. Viewing distribution:
 2. Skewness
 
+Classification Method: Cross-validation Using AUC
+# Use the glmnet package to fit Lasso & use AUC as the criteria to select the best tuning parameter. Followings are shown below:
+- Mutating data
+- Plot the cv results log(λ) vs mse
+- Report the best λ for Lasso using lambda.min or lambda.1se
+- What is the corresponding AUC?
+- Apply the best model to the testing data and report the prediction AUC with package ROCR
+- Does the model fits well?
+
+```{r}
+library(glmnet)
+#Mutating data frame
+data= train %>%
+  select('CryoSleep','Age':'VRDeck', 'Transported')
+
+#Plot the cv results log(λ) vs mse.
+#alpha=1 is the lasso penalty,
+lasso.fit = cv.glmnet(x = data.matrix(data[, -9]), y = data$Transported,
+                       alpha=1 ,ty.measure = "auc")
+plot(lasso.fit)
+```
+```{r}
+#We can view the selected λ’s and the corresponding coefficients
+coef(lasso.fit, s = "lambda.min")
+#lambda.min is the value of λ that gives minimum mean cross-validated error
+lasso.fit$lambda.min
+# lambda.lse, which gives the most regularized model such that error is within one standard error of the minimum
+lasso.fit$lambda.1se
+```
+```{r}
+lassopred = predict(lasso.fit, as.matrix(data[, -9]), s = "lambda.min")
+library(ROCR)
+roc <- prediction(lassopred, data$Transported)
+# The prediction AUC
+performance(roc, measure = "auc")@y.values[[1]]
+
+```
+The prediction AUC is decent, which is around 80%. It might be better than random guess.  Running this multiple times, the result is a bit different.
+
+
