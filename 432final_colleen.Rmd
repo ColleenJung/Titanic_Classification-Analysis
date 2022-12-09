@@ -142,6 +142,30 @@ confusionMatrix(xtab)
 ```
 This model achieved an accuracy of 0.7979, which is just barely under the threshold of at least 80% that we like to see. So it does an adequate job at predicting results, but there will likely be more accurate model
 
+Classification Method: SVM
+```{r}
+data = train %>%
+  select('HomePlanet':'VRDeck', 'Transported')
+
+y = data$Transported
+x = data.matrix(data[, -14])
+cost.grid = expand.grid(cost = seq(1, 1.1, length = 2))
+control <- trainControl(method = "cv", number = 2)
+
+#Usused caret method
+#svm2 <- train(data$Transported ~., data = data, method = "svmLinear2", 
+              trControl = control,  
+              tuneGrid = cost.grid)
+
+library("e1071")
+svm.fit = svm(data$Transported ~ ., data = data,
+              type='C-classification', 
+              kernel='linear', scale=FALSE, cost = 1)
+conf_tab = table(svm.fit$fitted, data$Transported)
+confusionMatrix(conf_tab)
+```
+
+Classification Method: Random Forest
 ```{r}
 #Random Forest
 data = train %>%
@@ -149,27 +173,23 @@ data = train %>%
 y = data$Transported
 x = data.matrix(data[, -14])
 
-nodesize_all = c(1,5,10,20,30)    
-rfnodesize = matrix(NA, 1, length(nodesize_all))
+set.seed(432)
+params1 = expand.grid(mtry = seq(1,10,1), min.node.size = seq(10,50,5), splitrule = "gini")
+control1 = trainControl(method = "repeatedcv", number = 10, repeats = 3)
+fit1 = train(as.factor(Transported)~., data=data, method = "ranger", 
+                  tuneGrid = params1, trControl = control1,
+                  num.trees = 300,
+                  respect.unordered.factors = "partition")
 
-mtry_all = c(7:12)
-rfmtry = matrix(NA, 1, length(mtry_all))
-library(randomForest)
+fit1
 
-#tuning nodesize
-for (j in 1:length(nodesize_all)){
-    rffit = randomForest(data$Transported ~., data = data, mtry = 10, nodesize = nodesize_all[j])
-    rfpred = predict(rffit, data)
-    rfnodesize[1, j] = mean((rfpred - y)^2)
-}
+params2 = expand.grid(mtry = seq(5,7,1), min.node.size = seq(15,25,5), splitrule = "gini")
+control2 = trainControl(method = "repeatedcv", number = 10, repeats = 3)
+fit2 = train(as.factor(Transported)~., data=data, method = "ranger", 
+                  tuneGrid = params2, trControl = control2,
+                  num.trees = 300,
+                  respect.unordered.factors = "partition")
 
-#tuning mtry  
-for (j in 1:length(mtry_all)){
-    rffit = randomForest(data$Transported ~., data = data, mtry = mtry_all[j], nodesize = 7000)
-    rfpred = predict(rffit, data)
-    rfmtry[1, j] = mean((rfpred - y)^2)
-}
+fit2
 
-plot(nodesize_all, colMeans(rfnodesize), xlab = "nodesize", ylab = "error")
-plot(mtry_all, colMeans(rfmtry), xlab = "mtry", ylab = "error")
 ```
