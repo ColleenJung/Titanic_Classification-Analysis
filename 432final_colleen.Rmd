@@ -91,4 +91,85 @@ performance(roc, measure = "auc")@y.values[[1]]
 ```
 The prediction AUC is decent, which is around 80%. It might be better than random guess.  Running this multiple times, the result is a bit different.
 
+Classification Method: KNN
+```{r}
+library(caret)
+#Preparing to Tune
+data = train %>%
+  select('HomePlanet':'VRDeck', 'Transported')
 
+control <- trainControl(method = "cv", number = 10)
+
+y = data$Transported
+x = data.matrix(data[, -9])
+
+#Broad Tuning
+set.seed(2)
+knn.cvfit <- train(y ~ ., method = "knn", 
+                   data = data.frame("x" = x, "y" = as.factor(y)),
+                   tuneGrid = data.frame(k = seq(1, 150, 3)),
+                   trControl = control)
+
+plot(knn.cvfit$results$k, 1-knn.cvfit$results$Accuracy,
+     xlab = "K", ylab = "Classification Error", type = "b",
+     pch = 19, col = "darkorange")
+knn.cvfit$results$k[knn.cvfit$results$Accuracy == max(knn.cvfit$results$Accuracy)]
+```
+Now that we've narrowed our tuning down to a range, let's get more specific
+```{r}
+#Refined tuning
+set.seed(2)
+knn.cvfit <- train(y ~ ., method = "knn", 
+                   data = data.frame("x" = x, "y" = as.factor(y)),
+                   tuneGrid = data.frame(k = seq(15, 60, 1)),
+                   trControl = control)
+
+plot(knn.cvfit$results$k, 1-knn.cvfit$results$Accuracy,
+     xlab = "K", ylab = "Classification Error", type = "b",
+     pch = 19, col = "darkorange")
+
+k = knn.cvfit$results$k[knn.cvfit$results$Accuracy == max(knn.cvfit$results$Accuracy)]
+k    
+```
+This will be the k value we use in our KNN model
+```{r}
+#Running the KNN
+library(class)
+knn.fit <- knn(x, x, y, k = k)
+xtab = table(knn.fit, y)
+
+confusionMatrix(xtab)
+```
+This model achieved an accuracy of 0.7979, which is just barely under the threshold of at least 80% that we like to see. So it does an adequate job at predicting results, but there will likely be more accurate model
+
+```{r}
+#Random Forest
+data = train %>%
+  select('HomePlanet':'VRDeck', 'Transported')
+y = data$Transported
+x = data.matrix(data[, -14])
+
+nodesize_all = c(1,5,10,20,30)    
+rfnodesize = matrix(NA, 1, length(nodesize_all))
+
+mtry_all = c(7:12)
+rfmtry = matrix(NA, 1, length(mtry_all))
+library(randomForest)
+
+#tuning nodesize
+for (j in 1:length(nodesize_all)){
+    rffit = randomForest(data$Transported ~., data = data, mtry = 10, nodesize = nodesize_all[j])
+    rfpred = predict(rffit, data)
+    rfnodesize[1, j] = mean((rfpred - y)^2)
+}
+
+#tuning mtry  
+for (j in 1:length(mtry_all)){
+    rffit = randomForest(data$Transported ~., data = data, mtry = mtry_all[j], nodesize = 7000)
+    rfpred = predict(rffit, data)
+    rfmtry[1, j] = mean((rfpred - y)^2)
+}
+
+plot(nodesize_all, colMeans(rfnodesize), xlab = "nodesize", ylab = "error")
+plot(mtry_all, colMeans(rfmtry), xlab = "mtry", ylab = "error")
+```
