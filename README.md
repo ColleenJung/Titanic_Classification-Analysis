@@ -21,22 +21,22 @@ Ensure that you have the necessary R packages installed:
 
 ## Methods and Explanations
 1. Data Preprocessing
-The code cleans the data by dropping missing values and splitting columns to create new features. It also converts binary values to meaningful categories (VIP, CryoSleep, Transported).
+: The code cleans the data by dropping missing values and splitting columns to create new features. It also converts binary values to meaningful categories (VIP, CryoSleep, Transported).
 
 2. Data Visualization
-The project generates histograms and visualizations to explore data distributions and assess skewness.
+: The project generates histograms and visualizations to explore data distributions and assess skewness.
 
 3. Lasso Regression
-Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
+: Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
 
 4. K-Nearest Neighbors (KNN)
-KNN classification is performed using the caret package, with a tuning process to find the optimal k value. KNN classifies data points based on the majority class of their k-nearest neighbors.
+: KNN classification is performed using the caret package, with a tuning process to find the optimal k value. KNN classifies data points based on the majority class of their k-nearest neighbors.
 
 5. Support Vector Machine (SVM)
-SVM classification with a linear kernel is executed using the e1071 package. SVM is a powerful method for separating data points into different classes using a hyperplane.
+: SVM classification with a linear kernel is executed using the e1071 package. SVM is a powerful method for separating data points into different classes using a hyperplane.
 
 6. Random Forest
-A random forest classifier is built using the ranger package. Hyperparameter tuning is conducted to enhance model performance. Random Forest combines the predictions of multiple decision trees.
+: A random forest classifier is built using the ranger package. Hyperparameter tuning is conducted to enhance model performance. Random Forest combines the predictions of multiple decision trees.
 
 ## Results 
 The project evaluates and reports the performance of each classification method, including accuracy, AUC, and confusion matrices.
