@@ -20,22 +20,22 @@ Ensure that you have the necessary R packages installed:
 - `ranger`
 
 ## Methods and Explanations
-## Data Preprocessing
+# Data Preprocessing
 The code cleans the data by dropping missing values and splitting columns to create new features. It also converts binary values to meaningful categories (VIP, CryoSleep, Transported).
 
-## Data Visualization
+# Data Visualization
 The project generates histograms and visualizations to explore data distributions and assess skewness.
 
-## Lasso Regression
+# Lasso Regression
 Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
 
-## K-Nearest Neighbors (KNN)
+# K-Nearest Neighbors (KNN)
 KNN classification is performed using the caret package, with a tuning process to find the optimal k value. KNN classifies data points based on the majority class of their k-nearest neighbors.
 
-## Support Vector Machine (SVM)
+# Support Vector Machine (SVM)
 SVM classification with a linear kernel is executed using the e1071 package. SVM is a powerful method for separating data points into different classes using a hyperplane.
 
-## Random Forest
+# Random Forest
 A random forest classifier is built using the ranger package. Hyperparameter tuning is conducted to enhance model performance. Random Forest combines the predictions of multiple decision trees.
 
 ## Results 
