@@ -21,7 +21,8 @@ Ensure that you have the necessary R packages installed:
 
 ## Methods and Explanations
 
-- **Lasso Regression**: Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
+- **Lasso Regression**
+: Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
 
 - **K-Nearest Neighbors (KNN)**: KNN classification is performed using the caret package, with a tuning process to find the optimal k value. KNN classifies data points based on the majority class of their k-nearest neighbors.
 
