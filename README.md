@@ -21,14 +21,20 @@ Ensure that you have the necessary R packages installed:
 
 ## Methods and Explanations
 
-- **Lasso Regression**
-: Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
+- **Lasso Regression**:
+Lasso regression is implemented using the glmnet package. The model is optimized with cross-validation using the AUC as the evaluation metric. This method helps identify essential features that contribute to the classification task.
 
-- **K-Nearest Neighbors (KNN)**: KNN classification is performed using the caret package, with a tuning process to find the optimal k value. KNN classifies data points based on the majority class of their k-nearest neighbors.
-
-- **Support Vector Machine (SVM)**: SVM classification with a linear kernel is executed using the e1071 package. SVM is a powerful method for separating data points into different classes using a hyperplane.
-
-- **Random forest classifier**: A random forest classifier is built using the ranger package. Hyperparameter tuning is conducted to enhance model performance. Random Forest combines the predictions of multiple decision trees.
+- **K-Means**:
+K-Means is an unsupervised learning algorithm that partitions the data into K distinct, non-overlapping clusters based on feature similarity.
+  
+- **Heirarchical Clustering**:
+Hierarchical Clustering is an unsupervised learning technique that builds a hierarchy of clusters by either successively merging or splitting existing groups.
+  
+- **Spectral Clustering**:
+Spectral Clustering uses eigenvalues of a similarity matrix to reduce dimensionality before clustering in fewer dimensions.
+  
+- **AdaBoost**:
+AdaBoost, or Adaptive Boosting, is an ensemble learning method that combines multiple weak classifiers to form a strong classifier by iteratively adjusting the weights of data points.
 
 ## Results 
 The project evaluates and reports the performance of each classification method, including accuracy, AUC, and confusion matrices.
