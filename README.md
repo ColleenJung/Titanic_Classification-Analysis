@@ -27,7 +27,7 @@ Lasso regression is implemented using the glmnet package. The model is optimized
 - **K-Means**:
 K-Means is an unsupervised learning algorithm that partitions the data into K distinct, non-overlapping clusters based on feature similarity.
   
-- **Heirarchical Clustering**:
+- **Hierarchical Clustering**:
 Hierarchical Clustering is an unsupervised learning technique that builds a hierarchy of clusters by either successively merging or splitting existing groups.
   
 - **Spectral Clustering**:
